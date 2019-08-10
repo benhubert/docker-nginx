@@ -12,7 +12,11 @@ RUN apk add --no-cache nginx=${NGINX_VERSION}-r${PACKAGE_VERSION} \
  # Make sure that stream module gets loaded before geoip2 module
  # See https://github.com/leev/ngx_http_geoip2_module/issues/42
  && mv /etc/nginx/modules/stream.conf /etc/nginx/modules/00-stream.conf \
- && mv /etc/nginx/modules/http_geoip2.conf /etc/nginx/modules/90-http_geoip2.conf
+ && mv /etc/nginx/modules/http_geoip2.conf /etc/nginx/modules/90-http_geoip2.conf \
+ # forward request and error logs to docker log collector
+ && ln -sf /dev/stdout /var/log/nginx/access.log \
+ && ln -sf /dev/stderr /var/log/nginx/error.log
+
 
 EXPOSE 80
 EXPOSE 443
